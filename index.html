@@ -967,27 +967,28 @@ body.waiting .word-card::before {
   }
 
   .app {
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr;
     min-height: 100dvh;
     padding:
       env(safe-area-inset-top)
-      max(12px, env(safe-area-inset-right))
-      max(16px, env(safe-area-inset-bottom))
-      max(12px, env(safe-area-inset-left));
+      max(10px, env(safe-area-inset-right))
+      max(10px, env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left));
   }
 
   .header {
     gap: 0;
-    padding: 8px 0 0;
+    padding: 6px 0 0;
   }
 
   .toolbar {
     justify-content: start;
     flex-wrap: nowrap;
     width: 100%;
-    min-height: 52px;
+    min-height: 46px;
     overflow-x: auto;
-    padding: 8px 10px;
+    gap: 6px;
+    padding: 6px 8px;
     border-radius: 10px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -1001,15 +1002,40 @@ body.waiting .word-card::before {
   .tool-button,
   .pause-button {
     flex: 0 0 auto;
-    height: 38px;
+    height: 34px;
+  }
+
+  .toolbar select {
+    width: 76px;
+  }
+
+  .tool-button {
+    min-width: 30px;
+  }
+
+  .tool-button.text {
+    min-width: 46px;
+    font-size: 14px;
+  }
+
+  .archive-button,
+  .loop-button {
+    min-width: 44px;
+    padding: 0 8px;
+  }
+
+  .pause-button {
+    min-width: 62px;
+    padding: 0 10px;
+    font-size: 15px;
   }
 
   .practice-screen {
-    grid-template-rows: auto minmax(300px, 1fr) 34px auto;
+    grid-template-rows: 54px minmax(260px, 1fr) 24px 66px;
     width: 100%;
-    min-height: calc(100dvh - 92px);
-    gap: 18px;
-    padding: 14px 0 0;
+    min-height: calc(100dvh - 64px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    gap: 10px;
+    padding: 10px 0 0;
     transform: none;
   }
 
@@ -1022,12 +1048,18 @@ body.waiting .word-card::before {
     min-width: 0;
     width: 50%;
     column-gap: 8px;
+    grid-template-columns: 24px minmax(0, 1fr);
+    min-height: 44px;
+  }
+
+  .next-word {
+    grid-template-columns: minmax(0, 1fr) 24px;
   }
 
   .prev-word div,
   .next-word div {
     overflow: hidden;
-    font-size: 16px;
+    font-size: 15px;
     letter-spacing: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1038,6 +1070,7 @@ body.waiting .word-card::before {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 11px;
   }
 
   .prev-word span,
@@ -1054,39 +1087,59 @@ body.waiting .word-card::before {
   }
 
   .word-card {
-    min-height: 300px;
-    padding: 8px 4px;
+    min-height: 260px;
+    padding: 0 4px;
   }
 
   .target-text {
     gap: 0.04em;
-    min-height: 58px;
-    font-size: clamp(34px, 10vw, 52px);
+    min-height: 52px;
+    font-size: clamp(32px, 10vw, 48px);
   }
 
   .target-text.sentence-target {
-    font-size: clamp(20px, 6vw, 30px);
+    font-size: clamp(19px, 5.7vw, 28px);
+  }
+
+  .phonetic {
+    min-height: 22px;
+    margin-top: 0;
+    font-size: 12px;
   }
 
   .hint-text,
   .hint-text.example-translation {
-    font-size: 16px;
+    min-height: 26px;
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.45;
   }
 
   .example-text {
-    font-size: 15px;
+    min-height: 32px;
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .typed-preview {
+    min-height: 20px;
+    margin-top: 10px;
+    font-size: 12px;
   }
 
   .progress-wrap {
     width: min(360px, 82vw);
+    height: 6px;
   }
 
   .stats-card {
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
+    gap: 4px;
     width: 100%;
-    min-height: 72px;
-    padding: 12px 10px;
+    min-height: 62px;
+    padding: 9px 8px;
+    border-radius: 8px;
   }
 
   .stat {
@@ -1094,12 +1147,29 @@ body.waiting .word-card::before {
   }
 
   .stat strong {
-    font-size: 17px;
+    font-size: 15px;
   }
 
   .stat span {
-    padding-top: 6px;
-    font-size: 11px;
+    padding-top: 4px;
+    font-size: 10px;
+  }
+
+  .modal-backdrop {
+    padding: max(12px, env(safe-area-inset-top)) 10px max(12px, env(safe-area-inset-bottom));
+  }
+
+  .modal {
+    width: 100%;
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  .modal-header {
+    padding: 14px 16px;
+  }
+
+  .panel {
+    padding: 16px;
   }
 
   .import-layout {
@@ -1295,13 +1365,6 @@ Typing is memory. | 打字也是记忆</pre>
 
         <div id="settings-panel" class="panel" hidden>
           <div class="settings-grid">
-            <label class="setting-row">
-              <span>
-                <strong>按键音</strong>
-                <small>使用官方 Default.wav 机械键盘声音</small>
-              </span>
-              <input id="key-sound-toggle" type="checkbox" />
-            </label>
             <label class="setting-row">
               <span>
                 <strong>效果音</strong>
@@ -28086,7 +28149,6 @@ const el = {
   dailyItems: $("#daily-items"),
   dailySummary: $("#daily-summary"),
   clearDaily: $("#clear-daily"),
-  keySoundToggle: $("#key-sound-toggle"),
   effectSoundToggle: $("#effect-sound-toggle"),
   autoSpeakToggle: $("#auto-speak-toggle"),
   ignoreCaseToggle: $("#ignore-case-toggle"),
@@ -28101,7 +28163,7 @@ function createAudio(src, volume) {
 }
 
 function playSound(name) {
-  if (name === "key" && !state.keySound) return;
+  if (name === "key") return;
   if ((name === "beep" || name === "correct") && !state.effectSound) return;
   const source = sounds[name];
   if (!source) return;
@@ -28279,7 +28341,6 @@ function render() {
   el.dictationToggle.classList.toggle("active", state.dictation);
   el.translationToggle.classList.toggle("active", state.translationVisible);
   el.themeButton.classList.toggle("active", !state.lightMode);
-  el.keySoundToggle.checked = state.keySound;
   el.effectSoundToggle.checked = state.effectSound;
   el.autoSpeakToggle.checked = state.autoSpeak;
   el.ignoreCaseToggle.checked = state.ignoreCase;
@@ -28487,7 +28548,6 @@ function handlePracticeKey(key, event) {
     typed += correctChar;
     state.session.correctCount += 1;
     flashWrongIndex = -1;
-    playSound("key");
     autoFillSkipChars(target);
   } else {
     typed += key;
@@ -29080,13 +29140,6 @@ function wireEvents() {
     state.lightMode = !state.lightMode;
     saveState();
     render();
-  });
-
-  el.keySoundToggle.addEventListener("change", () => {
-    state.keySound = el.keySoundToggle.checked;
-    saveState();
-    render();
-    if (state.keySound) playSound("key");
   });
 
   el.effectSoundToggle.addEventListener("change", () => {
