@@ -1216,6 +1216,51 @@ body.waiting .word-card::before {
     padding: 16px;
   }
 
+  body.keyboard-open .app {
+    grid-template-rows: 1fr;
+    padding-top: max(6px, env(safe-area-inset-top));
+  }
+
+  body.keyboard-open .header,
+  body.keyboard-open .nav-row,
+  body.keyboard-open .progress-wrap,
+  body.keyboard-open .stats-card {
+    display: none;
+  }
+
+  body.keyboard-open .practice-screen {
+    grid-template-rows: minmax(0, 1fr);
+    height: calc(var(--visual-height, 100dvh) - 16px - env(safe-area-inset-top));
+    padding: 4px 0 0;
+  }
+
+  body.keyboard-open .word-card {
+    align-content: center;
+    padding-bottom: 10px;
+  }
+
+  body.keyboard-open .target-text {
+    min-height: 44px;
+    font-size: clamp(30px, 9vw, 42px);
+  }
+
+  body.keyboard-open .target-text.sentence-target {
+    font-size: clamp(18px, 5vw, 24px);
+  }
+
+  body.keyboard-open .hint-text,
+  body.keyboard-open .hint-text.example-translation {
+    max-height: 4.4em;
+    overflow: hidden;
+    font-size: 15px;
+  }
+
+  body.keyboard-open .example-text {
+    max-height: 5.8em;
+    overflow: hidden;
+    font-size: 14px;
+  }
+
   .import-layout {
     grid-template-columns: 1fr;
   }
@@ -28637,6 +28682,17 @@ function focusPracticeInput() {
   if (!el.practiceInput || state.paused || el.modalBackdrop.hidden === false) return;
   el.practiceInput.value = "";
   el.practiceInput.focus({ preventScroll: true });
+  updateKeyboardMode(true);
+}
+
+function updateKeyboardMode(forceOpen = false) {
+  const viewport = window.visualViewport;
+  const visualHeight = viewport?.height || window.innerHeight;
+  const fullHeight = Math.max(window.innerHeight, document.documentElement.clientHeight || 0);
+  const focused = document.activeElement === el.practiceInput;
+  const keyboardLikelyOpen = forceOpen || (focused && visualHeight < fullHeight * 0.78);
+  document.documentElement.style.setProperty("--visual-height", `${Math.floor(visualHeight)}px`);
+  document.body.classList.toggle("keyboard-open", keyboardLikelyOpen);
 }
 
 function handlePracticeBeforeInput(event) {
@@ -29107,6 +29163,11 @@ function wireEvents() {
   });
   el.practiceInput.addEventListener("beforeinput", handlePracticeBeforeInput);
   el.practiceInput.addEventListener("input", resetPracticeInput);
+  el.practiceInput.addEventListener("focus", () => updateKeyboardMode(true));
+  el.practiceInput.addEventListener("blur", () => updateKeyboardMode(false));
+  window.visualViewport?.addEventListener("resize", () => updateKeyboardMode(false));
+  window.visualViewport?.addEventListener("scroll", () => updateKeyboardMode(false));
+  window.addEventListener("resize", () => updateKeyboardMode(false));
   el.speakButton.addEventListener("click", speakCurrent);
   el.inlineSpeak.addEventListener("click", speakCurrent);
   el.prevWordBtn.addEventListener("click", goToPrevious);
