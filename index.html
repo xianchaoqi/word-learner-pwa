@@ -1456,6 +1456,13 @@ Typing is memory. | 打字也是记忆</pre>
           <div class="settings-grid">
             <label class="setting-row">
               <span>
+                <strong>按键音</strong>
+                <small>电脑和 iPad 保留机械键盘声音</small>
+              </span>
+              <input id="key-sound-toggle" type="checkbox" />
+            </label>
+            <label class="setting-row">
+              <span>
                 <strong>效果音</strong>
                 <small>错误 beep 与完成 correct 声音</small>
               </span>
@@ -28238,6 +28245,7 @@ const el = {
   dailyItems: $("#daily-items"),
   dailySummary: $("#daily-summary"),
   clearDaily: $("#clear-daily"),
+  keySoundToggle: $("#key-sound-toggle"),
   effectSoundToggle: $("#effect-sound-toggle"),
   autoSpeakToggle: $("#auto-speak-toggle"),
   ignoreCaseToggle: $("#ignore-case-toggle"),
@@ -28252,7 +28260,7 @@ function createAudio(src, volume) {
 }
 
 function playSound(name) {
-  if (name === "key") return;
+  if (name === "key" && (shouldMuteKeySound() || !state.keySound)) return;
   if ((name === "beep" || name === "correct") && !state.effectSound) return;
   const source = sounds[name];
   if (!source) return;
@@ -28262,6 +28270,10 @@ function playSound(name) {
   if (playback && typeof playback.catch === "function") {
     playback.catch(() => playFallbackTone(name));
   }
+}
+
+function shouldMuteKeySound() {
+  return window.matchMedia("(max-width: 600px) and (pointer: coarse)").matches;
 }
 
 function playFallbackTone(name) {
@@ -28430,6 +28442,7 @@ function render() {
   el.dictationToggle.classList.toggle("active", state.dictation);
   el.translationToggle.classList.toggle("active", state.translationVisible);
   el.themeButton.classList.toggle("active", !state.lightMode);
+  el.keySoundToggle.checked = state.keySound;
   el.effectSoundToggle.checked = state.effectSound;
   el.autoSpeakToggle.checked = state.autoSpeak;
   el.ignoreCaseToggle.checked = state.ignoreCase;
@@ -28637,6 +28650,7 @@ function handlePracticeKey(key, event) {
     typed += correctChar;
     state.session.correctCount += 1;
     flashWrongIndex = -1;
+    playSound("key");
     autoFillSkipChars(target);
   } else {
     typed += key;
@@ -29245,6 +29259,13 @@ function wireEvents() {
     state.lightMode = !state.lightMode;
     saveState();
     render();
+  });
+
+  el.keySoundToggle.addEventListener("change", () => {
+    state.keySound = el.keySoundToggle.checked;
+    saveState();
+    render();
+    if (state.keySound && !shouldMuteKeySound()) playSound("key");
   });
 
   el.effectSoundToggle.addEventListener("change", () => {
